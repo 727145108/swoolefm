@@ -1,0 +1,22 @@
+{
+    "name": "crababy/swoolefm",
+    "description": "swoole frame work",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "crababy",
+        "email": "727145108@qq.com"
+      }
+    ],
+    "require": {
+      "php": ">=7.0.0"
+    },
+    "autoload": {
+      "psr-4": {
+        "SwooleFm\\": "src/"
+      },
+      "files": ["src/function.php"]
+    },
+    "minimum-stability": "dev"
+}
