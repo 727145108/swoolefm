@@ -58,7 +58,11 @@ class EventRegister {
       cli_set_process_title($name);
     }
     echo '_onWorkerStart' . PHP_EOL;
-    Event::tigger('_onWorkerStart', $server, $worker_id);
+    try {
+      Event::tigger('_onWorkerStart', $server, $worker_id);
+    } catch (\Exception $e) {
+      echo "Tigger::_onWorkerStart Exception" . $e->getMessage();
+    }
   }
 
   /**

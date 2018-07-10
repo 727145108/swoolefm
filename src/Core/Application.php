@@ -47,7 +47,12 @@ class Application {
     Config::setConf('App.MAIN_SERVER.OPTIONS.pid_file', $runtime . DIRECTORY_SEPARATOR . 'pid.pid');
     Config::setConf('App.MAIN_SERVER.OPTIONS.log_file', $runtime . DIRECTORY_SEPARATOR . 'swoole.log');
 
-    Event::tigger('_init');
+    try {
+      Event::tigger('_init');
+    } catch (\Exception $e) {
+      echo "Tigger::_init Exception" . $e->getMessage();
+    }
+
     //SwooleFmEvent::_init();
 
     return $this;
