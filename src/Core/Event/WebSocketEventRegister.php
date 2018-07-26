@@ -35,6 +35,6 @@ class WebSocketEventRegister extends EventRegister {
   }
 
   public static function onClose(\swoole_websocket_server $server, $fd) {
-
+    echo $fd . " Close \n"
   }
 }

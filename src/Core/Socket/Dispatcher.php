@@ -15,8 +15,8 @@ class Dispatcher {
 
   public static function dispatch(\swoole_server $server, $frame) {
     $_params = json_decode($frame->data);
-    $class = isset($_params['class']) ? $_params['class'] : 'Socket';
-    $action = isset($_params['action']) ? $_params['action'] : 'Index';
+    $class = isset($_params->class) ? $_params->class : 'Socket';
+    $action = isset($_params->action) ? $_params->action : 'Index';
 
     $classController = Config::getInstance()->getConf('App.ControllerNameSpace') . ucfirst($class);
     if(!class_exists($classController) || !method_exists($classController, $action)) {

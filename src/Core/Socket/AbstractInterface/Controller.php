@@ -16,7 +16,7 @@ abstract class Controller {
   private $server;
 
   public function __construct(\swoole_server $server, $frame) {
-    $this->request = $frame->data;
+    $this->request = $frame;
     $this->server = $server;
   }
 
