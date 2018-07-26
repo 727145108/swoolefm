@@ -26,7 +26,7 @@ class WebSocketEventRegister extends EventRegister {
       Logger::error("Exception:{$e->getMessage()} in File: {$e->getFile()} {$e->getLine()}");
       $result = array('code' => $e->getCode(), 'message' =>  $e->getMessage());
     }
-    $server->push($frame->fd, json_encode($result, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_NUMERIC_CHECK));
+    $server->push($frame->fd, json_encode($result, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
   }
 
   public static function onRequest(\swoole_http_request $request, \swoole_http_response $response) {
