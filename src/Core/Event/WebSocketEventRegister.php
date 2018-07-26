@@ -19,7 +19,6 @@ class WebSocketEventRegister extends EventRegister {
   }
 
   public static function onMessage(\swoole_websocket_server $server, $frame) {
-    $_params = json_decode($frame->data);
     $result = array();
     try {
       $result = Dispatcher::dispatch($server, $frame);
