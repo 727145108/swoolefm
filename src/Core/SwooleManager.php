@@ -46,7 +46,10 @@ class SwooleManager {
         $this->mainServer = new \swoole_http_server($config['HOST'], $config['PORT'], $config['RUN_MODEL'], $config['SOCK_TYPE']);
         $this->mainServer->on(EventRegister::onRequest, array('SwooleFm\Core\Event\HttpEventRegister', 'onRequest'));
         break;
-      case 'WEB_SOCKET':
+      case 'WEB_SOCKET_SERVER':
+        $this->mainServer = new \swoole_websocket_server($config['HOST'], $config['PORT'], $config['RUN_MODEL'], $config['SOCK_TYPE']);
+        $this->mainServer->on(EventRegister::onOpen, array('SwooleFm\Core\Event\WebSocketEventRegister', 'onOpen'));
+        $this->mainServer->on(EventRegister::onMessage, array('SwooleFm\Core\Event\WebSocketEventRegister', 'onMessage'));
         break;
       default:
         break;

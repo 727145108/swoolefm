@@ -58,7 +58,11 @@ class EventRegister {
       cli_set_process_title($name);
     }
     echo '_onWorkerStart' . PHP_EOL;
-    Event::tigger('_onWorkerStart', $server, $worker_id);
+    try {
+      Event::tigger('_onWorkerStart', $server, $worker_id);
+    } catch (\Exception $e) {
+      echo "Tigger::_onWorkerStart Exception" . $e->getMessage();
+    }
   }
 
   /**
@@ -74,10 +78,10 @@ class EventRegister {
   /**
    * [onWorkerError 当worker/task_worker进程发生异常后会在Manager进程内回调此函数]
    * @param  swoole_server $serv       [description]
-   * @param  int           $worker_id  [description]
-   * @param  int           $worker_pid [description]
-   * @param  int           $exit_code  [description]
-   * @param  int           $signal     [description]
+   * @param  int           $worker_id  [是异常进程的编号]
+   * @param  int           $worker_pid [是异常进程的ID]
+   * @param  int           $exit_code  [退出的状态码，范围是 1 ～255]
+   * @param  int           $signal     [进程退出的信号]
    * @return [type]                    [description]
    */
   public static function onWorkerError(\swoole_server $serv, int $worker_id, int $worker_pid, int $exit_code, int $signal) {

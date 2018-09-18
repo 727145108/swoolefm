@@ -22,7 +22,7 @@ class Timer {
    * @return [type]               [description]
    */
   public static function loop($microSeconds, $callback, $args = null) {
-    return SwooleManager::getInstance()->getServer()->tick($microSeconds, $callback_function, $args);
+    return SwooleManager::getInstance()->getServer()->tick($microSeconds, $callback, $args);
   }
 
   /**
