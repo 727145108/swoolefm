@@ -21,24 +21,35 @@ class HttpEventRegister extends EventRegister {
       $response->end();
       return false;
     }
-    $response->header('Access-Control-Allow-Origin', '*');
-    $response->header('Access-Control-Max-Age', '86400');
-    $response->header('Access-Control-Allow-Method', 'POST, GET, PUT, UPDATE, DELETE');
-    $response->header('Access-Control-Allow-Headers', 'Origin, X-CSRF-Token, X-Requested-With, Content-Type, Accept');
-    $response->header('Content-type', 'application/json;charset=utf-8');
-    $response->status(200);
+    $result = array(
+      'header'  => array(
+        'Access-Control-Allow-Origin' => '*',
+        'Access-Control-Max-Age' => '86400',
+        'Access-Control-Allow-Method' => 'POST, GET, PUT, UPDATE, DELETE',
+        'Access-Control-Allow-Headers' => 'Origin, X-CSRF-Token, X-Requested-With, Content-Type, Accept',
+        'Content-type' => 'application/json;charset=utf-8',
+      )
+    );
+    Event::tigger('beforRequest', $request, $response);
     try {
-      Event::tigger('beforRequest', $request, $response);
-      Dispatcher::dispatch($request, $response);
+      $res = Dispatcher::dispatch($request, $response);
+      $result['header'] = array_merge($result['header'], isset($res['header']) ? $res['header'] : array());
+      $result['status'] = isset($res['status']) ? $res['status'] : 200;
+      $result['result'] = $res['result'];
     } catch (\Exception $e) {
-      $response->status(502);
-      Logger::error("Exception:{$e->getMessage()} in File: {$e->getFile()} {$e->getLine()}");
-      $response->write(json_encode(array('code' => $e->getCode(), 'message' =>  $e->getMessage())));
+      Logger::error("Exception:{$e->getCode()}  {$e->getMessage()} in File: {$e->getFile()} {$e->getLine()}");
+      $result['status'] = 502;
+      $result['result'] = array('code' => $e->getCode(), 'message' => $e->getMessage());
       //throw $e;
-    } finally {
-      Event::tigger('afterResponse', $request, $response);
     }
-    $response->end();
+    if(isset($result['header']) && is_array($result['header'])) {
+      foreach ($result['header'] as $item => $val) {
+        $response->header($item, $val);
+      }
+    }
+    $response->status($result['status']);
+    Event::tigger('afterResponse', $request, $response);
+    $response->write(json_encode($result['result'], JSON_UNESCAPED_UNICODE));
     echo getmypid() .  " \tEnd Memory:" . memory_get_usage(true) / 1024 . PHP_EOL;
     return false;
   }

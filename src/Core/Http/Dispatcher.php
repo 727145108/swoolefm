@@ -24,15 +24,14 @@ class Dispatcher {
     if(!class_exists($classController) || !method_exists($classController, $method)) {
       throw new \Exception('无效的请求');
     }
-    try {
-      $controller = new $classController($request, $response);
-      $controller->_beforRequest();
-      $controller->$method();
-    } catch (\Exception $e) {
-      throw $e;
-    } finally {
-      $controller->_afterResponse();
+    $controller = new $classController($request, $response);
+    if($controller->_beforRequest()) {
+      try {
+        $controller->$method();
+      } catch (\Exception $e) {
+        throw $e;
+      }
     }
-    return false;
+    $controller->_afterResponse();
   }
 }
